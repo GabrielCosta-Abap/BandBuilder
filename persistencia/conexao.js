@@ -1,9 +1,11 @@
-const conexao = {
-    host: 'localhost',
-    port: 5432,
-    database: 'nome-do-banco',
-    user: 'user',
-    password:'password'
-}
+const { Pool } = require('pg');
 
-module.exports = {conexao}
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'BandBuilder',
+    password: 'Hardc0re.',
+    port: 5432,
+});
+
+module.exports = { pool };
