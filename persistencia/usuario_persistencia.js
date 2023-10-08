@@ -18,9 +18,6 @@ async function getUsers() {
     }
     }
 
-    module.exports = {
-    getUsers,
-    };
 
     async function searchById(userId) {
         try {
@@ -39,10 +36,6 @@ async function getUsers() {
         }
     }
 
-    module.exports = {
-        searchById,
-    };
-
     async function insertUser(userData) {
         try {
             const client = await pool.connect();
@@ -58,5 +51,5 @@ async function getUsers() {
     }
     
     module.exports = {
-        insertUser,
+        insertUser,getUsers,searchById,
     };
