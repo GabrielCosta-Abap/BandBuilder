@@ -1,7 +1,7 @@
 const userNegocio = require('../negocio/usuario_negocio');
 
-module.exports = {
-    getUsers: async (req, res) => {
+
+    async function getUsers (req, res) {
         console.log('Chegou no controller');
         try {
             const users = await userNegocio.getUsers();
@@ -13,9 +13,9 @@ module.exports = {
                 res.status(500).send('Deu pau na chamada da API: ' + error.message);
             }
         }
-    },
+    }
 
-    searchById: async (req, res) => {
+    async function searchById (req, res) {
         const userId = req.params.id;
         try {
             const user = await userNegocio.searchById(userId);           
@@ -32,9 +32,9 @@ module.exports = {
                 res.json(user);
               }
         }
-    },
+    }
 
-    insertUser: async (req, res) => {
+    async function insertUser (req, res) {
         const userData = req.body; 
         try {
             const newUser = await userNegocio.insertUser(userData);
@@ -44,5 +44,10 @@ module.exports = {
         }
     }
 
+    
+    module.exports = {
+        insertUser,getUsers,searchById,
+    };
 
-};
+
+

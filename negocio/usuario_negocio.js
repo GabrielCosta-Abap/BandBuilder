@@ -1,13 +1,17 @@
 const userPersistence = require('../persistencia/usuario_persistencia')
 
-module.exports = {
 
-    getUsers: async ()=>{
+
+    async function getUsers () {
+        try{
         console.log('chegou no negócio')
         return await userPersistence.getUsers();
-    },
+        } catch(error) {
+            throw new Error ('Erro ao chamar camada de Persistencia' + error.message)
+        }
+    }
 
-    searchById: async (userId) => {
+    async function searchById (userId) {
         try {
             console.log('Chegou na função searchById do negócio');
             const user = await userPersistence.searchById(userId);
@@ -15,9 +19,9 @@ module.exports = {
         } catch (error) {
             throw new Error('Erro ao buscar usuário por ID no negócio: ' + error.message);
         }
-    },
+    }
 
-    insertUser: async (userData) => {
+    async function insertUser (userData) {
         try {
             const newUser = await userPersistence.insertUser(userData);
             return newUser;
@@ -26,4 +30,7 @@ module.exports = {
         }
     }
 
-};
+    module.exports = {
+        insertUser,getUsers,searchById,
+    };
+
