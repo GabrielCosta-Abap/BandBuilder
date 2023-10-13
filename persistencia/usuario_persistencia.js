@@ -50,6 +50,23 @@ async function insertUser(userData) {
   }
 }
 
+async function login(email, password) {
+  try {
+    const client = await pool.connect();
+    const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
+    const result = await client.query(query, [email, password]);
+    client.release();
+
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw new Error('Erro ao buscar usuário por ID: ' + error.message);
+  }
+}
+
 module.exports = {
-  insertUser, getUsers, searchById,
+  insertUser, getUsers, searchById, login
 };

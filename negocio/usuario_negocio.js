@@ -30,7 +30,17 @@ const userPersistence = require('../persistencia/usuario_persistencia')
         }
     }
 
+    async function login (email, password) {
+        try {
+            console.log('Chegou na função login do negócio');
+            const user = await userPersistence.login(email, password);
+            return user;
+        } catch (error) {
+            throw new Error('Erro no login no negócio: ' + error.message);
+        }
+    }
+
     module.exports = {
-        insertUser,getUsers,searchById,
+        insertUser,getUsers,searchById, login
     };
 
