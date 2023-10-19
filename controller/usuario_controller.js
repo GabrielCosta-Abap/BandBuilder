@@ -55,6 +55,42 @@ async function searchById(req, res) {
     }
   }
 }
+async function getUserProfiles(req, res) {
+  const userId = req.params.id;
+  try {
+    const user = await userNegocio.getUserProfiles(userId);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).send('Nenhum perfil encontrado');
+    }
+  } catch (error) {
+    if (error && error.code) {
+      res.status(error.code).json({ erro: error.message });
+    }
+    else {
+      res.json(user);
+    }
+  }
+}
+async function searchById(req, res) {
+  const userId = req.params.id;
+  try {
+    const user = await userNegocio.searchById(userId);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).send('Usuário não encontrado');
+    }
+  } catch (error) {
+    if (error && error.code) {
+      res.status(error.code).json({ erro: error.message });
+    }
+    else {
+      res.json(user);
+    }
+  }
+}
 
 async function insertUser(req, res) {
   const userData = req.body;
@@ -67,5 +103,5 @@ async function insertUser(req, res) {
 }
 
 module.exports = {
-  insertUser, getUsers, searchById, login
+  insertUser, getUsers, searchById, login, getUserProfiles
 };

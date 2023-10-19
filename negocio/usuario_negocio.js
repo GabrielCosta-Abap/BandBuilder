@@ -20,6 +20,14 @@ const userPersistence = require('../persistencia/usuario_persistencia')
             throw new Error('Erro ao buscar usuário por ID no negócio: ' + error.message);
         }
     }
+    async function getUserProfiles (userId) {
+        try {
+            const user = await userPersistence.getUserProfiles(userId);
+            return user;
+        } catch (error) {
+            throw new Error('Erro ao buscar perfis do usuário no negócio: ' + error.message);
+        }
+    }
 
     async function insertUser (userData) {
         try {
@@ -41,6 +49,6 @@ const userPersistence = require('../persistencia/usuario_persistencia')
     }
 
     module.exports = {
-        insertUser,getUsers,searchById, login
+        insertUser,getUsers,searchById, login, getUserProfiles
     };
 

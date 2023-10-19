@@ -36,6 +36,26 @@ async function searchById(userId) {
   }
 }
 
+async function getUserProfiles(userId) {
+  try {
+    const client = await pool.connect();
+    const query = `SELECT * 
+                     FROM bands 
+                     JOIN user_bands ON user_bands.band_id = bands.band_id 
+                     WHERE user_bands.user_id = $1`;
+    const result = await client.query(query, [userId]);
+    client.release();
+
+    if (result.rows.length > 0) {
+      return result.rows;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw new Error('Erro ao buscar perfis do usuário: ' + error.message);
+  }
+}
+
 async function insertUser(userData) {
   try {
     const client = await pool.connect();
@@ -63,10 +83,10 @@ async function login(email, password) {
       return null;
     }
   } catch (error) {
-    throw new Error('Erro ao buscar usuário por ID: ' + error.message);
+    throw new Error('Erro ao realizar login: ' + error.message);
   }
 }
 
 module.exports = {
-  insertUser, getUsers, searchById, login
+  insertUser, getUsers, searchById, login, getUserProfiles
 };

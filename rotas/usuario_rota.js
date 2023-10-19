@@ -6,5 +6,6 @@ router.get('/list_users/', userController.getUsers);
 router.get('/:id', userController.searchById);
 router.post('/insert_user/', userController.insertUser);
 router.post('/login/', userController.login);
+router.get('/list_User_profiles/:id', userController.getUserProfiles);
 
 module.exports = router;
