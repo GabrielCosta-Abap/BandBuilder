@@ -59,8 +59,8 @@ async function getUserProfiles(userId) {
 async function insertUser(userData) {
   try {
     const client = await pool.connect();
-    const query = 'INSERT INTO USERS (PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, LANGUAGES, INSTRUMENTS, ADDRESS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, BAND_ID, DESCRIPTION, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *';
-    const values = [userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, userData.LANGUAGES, userData.INSTRUMENTS, userData.ADDRESS, userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.BAND_ID, userData.DESCRIPTION, userData.YOUTUBE_LINK];
+    const query = 'INSERT INTO USERS (PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, LANGUAGES, INSTRUMENTS, ADDRESS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, DESCRIPTION, IMG_URL, WHATSAPP, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *';
+    const values = [userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, userData.LANGUAGES, userData.INSTRUMENTS, userData.ADDRESS, userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.DESCRIPTION, userData.IMG_URL, userData.WHATSAPP, userData.YOUTUBE_LINK];
     const result = await pool.query(query, values);
     client.release();
 
@@ -87,6 +87,29 @@ async function login(email, password) {
   }
 }
 
+async function deleteUser(userId) {
+	
+  const client = await pool.connect();
+
+  try {
+    const sql = "DELETE FROM users WHERE user_id = $1 RETURNING *";
+    const values = [userId];
+
+    const res = await client.query(sql, values);
+
+    if (res.rows && res.rows.length > 0) {
+      const user = res.rows[0];
+      return user;
+    } else {
+      throw new Error("Usuário não encontrado");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  } finally {
+    await client.end();
+  }
+}
+
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles
+  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser
 };
