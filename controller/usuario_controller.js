@@ -75,6 +75,25 @@ async function getUserProfiles(req, res) {
 	}
 }
 
+async function searchFeedProfiles(req, res) {
+	const filter = req.params.id;
+	try {
+		const user = await userNegocio.searchFeedProfiles(filter);
+		if (user) {
+			res.status(200).json(user);
+		} else {
+			res.status(404).send('Nenhum perfil encontrado');
+		}
+	} catch (error) {
+		if (error && error.code) {
+			res.status(error.code).json({ erro: error.message });
+		}
+		else {
+			res.json(user);
+		}
+	}
+}
+
 async function searchById(req, res) {
 	const userId = req.params.id;
 	console.log(userId)
@@ -121,5 +140,5 @@ async function deleteUser(req, res){
 }
 
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles
 };

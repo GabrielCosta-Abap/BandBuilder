@@ -29,6 +29,16 @@ async function getUserProfiles(userId) {
 	}
 }
 
+async function searchFeedProfiles(filter) {
+	try {
+        console.log('chegou na feed get')
+		const user = await userPersistence.searchFeedProfiles(filter);
+		return user;
+	} catch (error) {
+		throw new Error('Erro ao buscar perfis do usuário no negócio: ' + error.message);
+	}
+}
+
 async function insertUser(userData) {
 	try {
 		const newUser = await userPersistence.insertUser(userData);
@@ -65,6 +75,6 @@ async function deleteUser(userId) {
 }
 
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles
 };
 

@@ -56,6 +56,34 @@ async function getUserProfiles(userId) {
   }
 }
 
+async function searchFeedProfiles(filter) {
+  try {
+    let feedContent = [];
+    const client = await pool.connect();
+    
+    const query = `SELECT * FROM users`;
+    const result = await client.query(query);
+    
+    feedContent = feedContent.concat(result.rows);
+    
+    const query2 = `SELECT * FROM bands`;
+    const result2 = await client.query(query2);
+    
+    feedContent = feedContent.concat(result2.rows);
+    
+    client.release();
+
+    if (feedContent.length > 0) {
+      return feedContent;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    throw new Error('Erro ao buscar informações do feed: ' + error.message);
+  }
+}
+
+
 async function insertUser(userData) {
   try {
     const client = await pool.connect();
@@ -111,5 +139,5 @@ async function deleteUser(userId) {
 }
 
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser
+  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles
 };
