@@ -65,7 +65,7 @@ async function searchFeedProfiles(filter) {
 
     const searchValue = `%${filter}%`;
 
-    if (filter) {
+    if (filter && filter != '') {
       query = `SELECT * FROM users WHERE name = $1 OR instruments LIKE $2 OR musical_genre = $3`;
     }else{
       query = `SELECT * FROM users`;
@@ -78,7 +78,7 @@ async function searchFeedProfiles(filter) {
     console.log('passou da  query')
     feedContent = feedContent.concat(result.rows);
     
-    if (filter) {
+    if (filter && filter != '') {
       query2 = `SELECT * FROM bands WHERE name = $1 OR musical_genre = $2`;
     }else{
       query2 = `SELECT * FROM bands`;
