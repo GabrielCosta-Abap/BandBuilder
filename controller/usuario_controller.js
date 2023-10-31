@@ -89,7 +89,7 @@ async function searchFeedProfiles(req, res) {
 			res.status(error.code).json({ erro: error.message });
 		}
 		else {
-			res.json(user);
+			res.status(500).json({ erro: 'Bah magrão só sei q deu erro te vira' });
 		}
 	}
 }

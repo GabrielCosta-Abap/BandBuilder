@@ -60,19 +60,37 @@ async function searchFeedProfiles(filter) {
   try {
     let feedContent = [];
     const client = await pool.connect();
+    let query = ''
+    let query2 = ''
+
+    const searchValue = `%${filter}%`;
+
+    if (filter) {
+      query = `SELECT * FROM users WHERE name = $1 OR instruments LIKE $2 OR musical_genre = $3`;
+    }else{
+      query = `SELECT * FROM users`;
+    }
     
-    const query = `SELECT * FROM users`;
-    const result = await client.query(query);
-    
+    console.log(filter)
+    console.log('chegou na primeira query')
+    console.log(query)
+    const result = await client.query(query, [filter, searchValue, filter]);
+    console.log('passou da  query')
     feedContent = feedContent.concat(result.rows);
     
-    const query2 = `SELECT * FROM bands`;
-    const result2 = await client.query(query2);
+    if (filter) {
+      query2 = `SELECT * FROM bands WHERE name = $1 OR musical_genre = $2`;
+    }else{
+      query2 = `SELECT * FROM bands`;
+    }
+
+    const result2 = await client.query(query2, [filter, filter]);
     
     feedContent = feedContent.concat(result2.rows);
     
     client.release();
 
+    console.log('passou da busca toda')
     if (feedContent.length > 0) {
       return feedContent;
     } else {
