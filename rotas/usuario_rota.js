@@ -8,6 +8,6 @@ router.post('/insert_user/', userController.insertUser);
 router.post('/login/', userController.login);
 router.delete('/delete_user/:id', userController.deleteUser);
 router.get('/list_User_profiles/:id', userController.getUserProfiles);
-router.get('/search_profiles/:id', userController.searchFeedProfiles);
+router.get('/search_profiles/:searchValue/:category', userController.searchFeedProfiles);
 
 module.exports = router;

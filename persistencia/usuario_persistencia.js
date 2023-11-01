@@ -56,38 +56,45 @@ async function getUserProfiles(userId) {
   }
 }
 
-async function searchFeedProfiles(filter) {
+async function searchFeedProfiles(filter, category) {
   try {
     let feedContent = [];
     const client = await pool.connect();
     let query = ''
     let query2 = ''
+    let result = {}
+    let result2 = {}
 
     const searchValue = `%${filter}%`;
 
-    if (filter && filter != '') {
-      query = `SELECT * FROM users WHERE name = $1 OR instruments LIKE $2 OR musical_genre = $3`;
-    }else{
-      query = `SELECT * FROM users`;
+    if (category != 2) { // se pede por músicos
+      
+      if (filter && filter != 'all') {
+        query = `SELECT * FROM users WHERE name = $1 OR instruments LIKE $2 OR musical_genre = $3`;
+        result = await client.query(query, [filter, searchValue, filter]);
+      }else{
+        query = `SELECT * FROM users`;
+        result = await client.query(query);
+      }
+      
+      feedContent = feedContent.concat(result.rows);
+
     }
     
-    console.log(filter)
-    console.log('chegou na primeira query')
-    console.log(query)
-    const result = await client.query(query, [filter, searchValue, filter]);
-    console.log('passou da  query')
-    feedContent = feedContent.concat(result.rows);
-    
-    if (filter && filter != '') {
-      query2 = `SELECT * FROM bands WHERE name = $1 OR musical_genre = $2`;
-    }else{
-      query2 = `SELECT * FROM bands`;
+    if (category != 3) { // se pede por bandas
+      
+      if (filter && filter != 'all') {
+        query2 = `SELECT * FROM bands WHERE name = $1 OR musical_genre = $2`;
+        result2 = await client.query(query2, [filter, filter]);
+      }else{
+        query2 = `SELECT * FROM bands`;
+        result2 = await client.query(query2);
+      }
+      
+      feedContent = feedContent.concat(result2.rows);
+      
     }
 
-    const result2 = await client.query(query2, [filter, filter]);
-    
-    feedContent = feedContent.concat(result2.rows);
-    
     client.release();
 
     console.log('passou da busca toda')

@@ -29,10 +29,10 @@ async function getUserProfiles(userId) {
 	}
 }
 
-async function searchFeedProfiles(filter) {
+async function searchFeedProfiles(filter, category) {
 	try {
         console.log('chegou na feed get')
-		const user = await userPersistence.searchFeedProfiles(filter);
+		const user = await userPersistence.searchFeedProfiles(filter, category);
 		return user;
 	} catch (error) {
 		throw new Error('Erro ao buscar perfis do usuário no negócio: ' + error.message);
