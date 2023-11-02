@@ -70,8 +70,18 @@ async function searchFeedProfiles(filter, category) {
     if (category != 2) { // se pede por músicos
       
       if (filter && filter != 'all') {
-        query = `SELECT * FROM users WHERE name = $1 OR instruments LIKE $2 OR musical_genre = $3`;
-        result = await client.query(query, [filter, searchValue, filter]);
+
+        query = `SELECT * 
+                   FROM users 
+                   WHERE UPPER(name) = UPPER($1)
+                      OR UPPER(instruments) LIKE UPPER($2)
+                      OR UPPER(musical_genre) = UPPER($3)
+                      OR UPPER(city) = UPPER($4)`;
+
+        console.log(query)
+        console.log(filter, searchValue)
+        result = await client.query(query, [filter, searchValue, filter, filter]);
+        
       }else{
         query = `SELECT * FROM users`;
         result = await client.query(query);
@@ -84,8 +94,15 @@ async function searchFeedProfiles(filter, category) {
     if (category != 3) { // se pede por bandas
       
       if (filter && filter != 'all') {
-        query2 = `SELECT * FROM bands WHERE name = $1 OR musical_genre = $2`;
-        result2 = await client.query(query2, [filter, filter]);
+
+        query2 = `SELECT * 
+                    FROM bands
+                    WHERE UPPER(name) = UPPER($1)
+                       OR UPPER(musical_genre) = UPPER($2)
+                       OR UPPER(city) = UPPER($3)`;
+
+        result2 = await client.query(query2, [filter, filter, filter]);
+
       }else{
         query2 = `SELECT * FROM bands`;
         result2 = await client.query(query2);
@@ -107,7 +124,6 @@ async function searchFeedProfiles(filter, category) {
     throw new Error('Erro ao buscar informações do feed: ' + error.message);
   }
 }
-
 
 async function insertUser(userData) {
   try {
