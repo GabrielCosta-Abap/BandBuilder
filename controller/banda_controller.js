@@ -1,30 +1,5 @@
 const bandNegocio = require('../negocio/banda_negocio');
 
-//Definir se vamos ter login como banda...
-
-// async function login(req, res) {
-
-// 	const email = req.body.email;
-// 	const pasword = req.body.password;
-
-// 	try {
-// 		const user = await bandNegocio.login(email, pasword);
-// 		if (user) {
-// 			res.status(200).json(user);
-// 		} else {
-// 			res.status(404).send('Usuário não encontrado');
-// 		}
-// 	} catch (error) {
-// 		if (error && error.code) {
-// 			res.status(error.code).json({ erro: error.message });
-// 		}
-// 		else {
-// 			res.json(user);
-// 		}
-// 	}
-
-// }
-
 async function getBand(req, res) {
 	console.log('Chegou no controller de bandas');
 	try {
@@ -57,28 +32,6 @@ async function searchById(req, res) {
 		}
 	}
 }
-
-//Depende da definição de login como banda...
-
-// async function getUserProfiles(req, res) {
-// 	const userId = req.params.id;
-// 	try {
-// 		const user = await bandNegocio.getUserProfiles(userId);
-// 		if (user) {
-// 			res.status(200).json(user);
-// 		} else {
-// 			res.status(404).send('Nenhum perfil encontrado');
-// 		}
-// 	} catch (error) {
-// 		if (error && error.code) {
-// 			res.status(error.code).json({ erro: error.message });
-// 		}
-// 		else {
-// 			res.json(user);
-// 		}
-// 	}
-// }
-
 
 
 async function insertBand(req, res) {

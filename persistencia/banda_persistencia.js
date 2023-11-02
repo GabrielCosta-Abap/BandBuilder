@@ -36,26 +36,6 @@ async function searchById(bandId) {
   }
 }
 
-// async function getUserProfiles(userId) {
-//   try {
-//     const client = await pool.connect();
-//     const query = `SELECT * 
-//                      FROM bands 
-//                      JOIN user_bands ON user_bands.band_id = bands.band_id 
-//                      WHERE user_bands.user_id = $1`;
-//     const result = await client.query(query, [userId]);
-//     client.release();
-
-//     if (result.rows.length > 0) {
-//       return result.rows;
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     throw new Error('Erro ao buscar perfis do usuário: ' + error.message);
-//   }
-// }
-
 async function insertBand(bandData) {
   try {
     const client = await pool.connect();
@@ -69,24 +49,6 @@ async function insertBand(bandData) {
     throw new Error('Erro ao inserir usuário no banco de dados: ' + error.message);
   }
 }
-
-// Definir login como banda
-// async function login(email, password) {
-//   try {
-//     const client = await pool.connect();
-//     const query = 'SELECT * FROM users WHERE email = $1 AND password = $2';
-//     const result = await client.query(query, [email, password]);
-//     client.release();
-
-//     if (result.rows.length > 0) {
-//       return result.rows[0];
-//     } else {
-//       return null;
-//     }
-//   } catch (error) {
-//     throw new Error('Erro ao realizar login: ' + error.message);
-//   }
-// }
 
 async function deleteBand(bandId) {
 	

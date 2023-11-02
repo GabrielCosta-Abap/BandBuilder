@@ -30,18 +30,6 @@ async function insertBand(bandData) {
 	}
 }
 
-// Definir login como banda...
-
-// async function login(email, password) {
-// 	try {
-// 		console.log('Chegou na função login do negócio');
-// 		const user = await userPersistence.login(email, password);
-// 		return user;
-// 	} catch (error) {
-// 		throw new Error('Erro no login no negócio: ' + error.message);
-// 	}
-// }
-
 async function deleteBand(bandId) {
   try {
     
