@@ -140,6 +140,21 @@ async function deleteUser(req, res){
   }
 }
 
+async function sendContactSolic(req, res){
+	try {
+		const senderId 	 = req.params.senderId;
+		const receiverId = req.params.receiverId;
+		
+	  	await userNegocio.sendContactSolic(senderId, receiverId);
+	  	return res.status(200).json({ message: 'Solicitação enviada com sucesso!' });
+
+	} catch (error) {
+	  console.error(error);
+	  return res.status(500).json({ error: 'Erro interno do servidor' });
+	}
+
+}
+
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic
 };

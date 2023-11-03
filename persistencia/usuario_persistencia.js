@@ -179,6 +179,46 @@ async function deleteUser(userId) {
   }
 }
 
+async function sendContactSolic(senderId, receiverId){
+  const client = await pool.connect();
+  // STATUS:
+  // P - Pendente,
+  // C - Cancelada,
+  // A - Solic. Aceita
+  // R - Solic. Recusada
+
+  try {
+    let query = ''
+
+    const values = [senderId, receiverId];
+
+    const check = await client.query('SELECT COUNT(*) FROM solicitations WHERE sender_id = $1 AND receiver_id = $2', values)
+
+    console.log(check)
+    if (check.rows && check.rows[0].count > 0) {
+      query = "UPDATE solicitations SET status = 'C' WHERE sender_id = $1 AND receiver_id = $2 RETURNING *"
+    }else{
+      query = "INSERT INTO solicitations (sender_id, receiver_id, status) VALUES ($1, $2, 'P') RETURNING *";
+    }
+    
+    const res = await client.query(query, values);
+  
+    if (res.rows && res.rows.length > 0) {
+      const user = res.rows[0];
+      return user;
+    } else {
+      throw new Error("Usuário não encontrado");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  } finally {
+    await client.end();
+  }
+
+
+
+}
+
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles
+  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles,sendContactSolic
 };

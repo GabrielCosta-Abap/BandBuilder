@@ -74,7 +74,19 @@ async function deleteUser(userId) {
   }
 }
 
+async function sendContactSolic(senderId, receiverId){
+	try {
+	  
+	  await userPersistence.sendContactSolic(senderId, receiverId);
+	
+	  return { message: 'Contato solicitado com sucesso!' };
+	} catch (error) {
+	  throw new Error('Erro ao solicitar contato: ' + error.message);
+	}
+	
+}
+
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic
 };
 
