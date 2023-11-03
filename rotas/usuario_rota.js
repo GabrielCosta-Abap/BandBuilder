@@ -12,7 +12,9 @@ router.post('/login/', userController.login);
 router.delete('/delete_user/:id', userController.deleteUser);
 router.get('/list_User_profiles/:id', userController.getUserProfiles);
 router.get('/search_profiles/:searchValue/:category', userController.searchFeedProfiles);
-router.get('/send_contact_solic/:senderId/:receiverId', userController.sendContactSolic);
+router.post('/send_contact_solic/:senderId/:receiverId', userController.sendContactSolic);
+router.get('/get_contact_solics/:receiverId', userController.getContactSolics);
+
 //upload de imagem separado por enquanto.
 router.post('/upload/', upload.single("file"), (req, res) => {
 	return res.json(req.file.filename);

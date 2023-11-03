@@ -155,6 +155,21 @@ async function sendContactSolic(req, res){
 
 }
 
+async function getContactSolics(req, res){
+	try {
+		const receiverId = req.params.receiverId;
+		const solicitations = await userNegocio.getContactSolics(receiverId);
+
+		res.status(200).json(solicitations);
+	} catch (error) {
+		if (error && error.code) {
+			res.status(error.code).send(error.message);
+		} else {
+			res.status(500).send('Deu pau na chamada da API: ' + error.message);
+		}
+	}
+}
+
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics
 };

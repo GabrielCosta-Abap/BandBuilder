@@ -86,7 +86,17 @@ async function sendContactSolic(senderId, receiverId){
 	
 }
 
+async function getContactSolics(receiverId){
+
+	try {
+		return await userPersistence.getContactSolics(receiverId);
+	} catch (error) {
+		throw new Error('Erro ao chamar camada de Persistencia' + error.message)
+	}
+
+}
+
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics
 };
 

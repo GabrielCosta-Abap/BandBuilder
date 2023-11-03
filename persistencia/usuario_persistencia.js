@@ -18,7 +18,6 @@ async function getUsers() {
   }
 }
 
-
 async function searchById(userId) {
   try {
     const client = await pool.connect();
@@ -192,11 +191,15 @@ async function sendContactSolic(senderId, receiverId){
 
     const values = [senderId, receiverId];
 
-    const check = await client.query('SELECT COUNT(*) FROM solicitations WHERE sender_id = $1 AND receiver_id = $2', values)
+    const check = await client.query('SELECT * FROM solicitations WHERE sender_id = $1 AND receiver_id = $2', values)
 
     console.log(check)
-    if (check.rows && check.rows[0].count > 0) {
-      query = "UPDATE solicitations SET status = 'C' WHERE sender_id = $1 AND receiver_id = $2 RETURNING *"
+    if (check.rows && check.rows.length > 0) {
+     
+      let status = check.rows[0].status == 'C' ? 'P' : 'C'
+      values.push(status)
+     
+      query = `UPDATE solicitations SET status = $3 WHERE sender_id = $1 AND receiver_id = $2 RETURNING *`
     }else{
       query = "INSERT INTO solicitations (sender_id, receiver_id, status) VALUES ($1, $2, 'P') RETURNING *";
     }
@@ -215,10 +218,24 @@ async function sendContactSolic(senderId, receiverId){
     await client.end();
   }
 
+}
 
+async function getContactSolics(receiverId){
+  try {
 
+    const client = await pool.connect();
+
+    console.log(receiverId)
+    const result = await client.query(`SELECT * FROM solicitations WHERE receiver_id = $1 AND STATUS = 'P'`, [receiverId]);
+    // Libera o cliente de volta para o pool de conexões
+    client.release();
+    console.log('Resultado da consulta:', result.rows);
+    return result.rows;
+  } catch (error) {
+    throw new Error('Erro ao obter usuários: ' + error.message);
+  }
 }
 
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles,sendContactSolic
+  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles,sendContactSolic, getContactSolics
 };
