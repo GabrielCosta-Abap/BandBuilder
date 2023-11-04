@@ -40,21 +40,15 @@ async function insertBand(bandData) {
   try {
     const client = await pool.connect();
 
-    let id = await client.query('SELECT MAX(id) FROM bands')
+    // Obter o último ID da tabela
+    const max = await client.query('SELECT MAX(id) FROM bands');
+    const lastId = max.rows[0].max || 0;
 
-    let newId = 'B'
-    while (newId.length < 5) {
-      newId += 0
-    }
+    // Gerar o novo ID
+    const newId = 'B' + String(lastId + 1).padStart(4, '0');
 
-    newId += (id + 1)
-
-    while (newId.length > 5) {
-      id.replace('0', '')
-    }
-
-    const query = 'INSERT INTO BANDS (NAME, CITY, FACEBOOK_PAGE, YOUTUBE_PAGE, IG_PAGE, IMG_URL, WHATSAPP) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *';
-    const values = [bandData.NAME, bandData.CITY, bandData.FACEBOOK_PAGE, bandData.YOUTUBE_PAGE, bandData.IG_PAGE, bandData.IMG_URL, bandData.WHATSAPP];
+    const query = 'INSERT INTO BANDS (BAND_ID, NAME, CITY, FACEBOOK_PAGE, YOUTUBE_PAGE, IG_PAGE, IMG_URL, WHATSAPP) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+    const values = [newId, bandData.NAME, bandData.CITY, bandData.FACEBOOK_PAGE, bandData.YOUTUBE_PAGE, bandData.IG_PAGE, bandData.IMG_URL, bandData.WHATSAPP];
     const result = await pool.query(query, values);
     client.release();
 

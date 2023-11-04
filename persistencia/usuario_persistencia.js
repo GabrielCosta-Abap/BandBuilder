@@ -67,7 +67,7 @@ async function searchFeedProfiles(filter, category) {
     const searchValue = `%${filter}%`;
 
     if (category != 2) { // se pede por músicos
-      
+
       if (filter && filter != 'all') {
 
         query = `SELECT * 
@@ -80,18 +80,18 @@ async function searchFeedProfiles(filter, category) {
         console.log(query)
         console.log(filter, searchValue)
         result = await client.query(query, [filter, searchValue, filter, filter]);
-        
-      }else{
+
+      } else {
         query = `SELECT * FROM users`;
         result = await client.query(query);
       }
-      
+
       feedContent = feedContent.concat(result.rows);
 
     }
-    
+
     if (category != 3) { // se pede por bandas
-      
+
       if (filter && filter != 'all') {
 
         query2 = `SELECT * 
@@ -102,13 +102,13 @@ async function searchFeedProfiles(filter, category) {
 
         result2 = await client.query(query2, [filter, filter, filter]);
 
-      }else{
+      } else {
         query2 = `SELECT * FROM bands`;
         result2 = await client.query(query2);
       }
-      
+
       feedContent = feedContent.concat(result2.rows);
-      
+
     }
 
     client.release();
@@ -128,20 +128,14 @@ async function insertUser(userData) {
   try {
     const client = await pool.connect();
 
-    let id = await client.query('SELECT MAX(id) FROM users')
+    // Obter o último ID da tabela
+    const max = await client.query('SELECT MAX(id) FROM users');
+    const lastId = max.rows[0].max || 0;
 
-    let newId = 'U'
-    while (newId.length < 5) {
-      newId += 0
-    }
+    // Gerar o novo ID
+    const newId = 'U' + String(lastId + 1).padStart(4, '0');
 
-    newId += (id + 1)
-
-    while (newId.length > 5) {
-      id.replace('0', '')
-    }
-
-    const query = 'INSERT INTO USERS (USER_ID, PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, LANGUAGES, INSTRUMENTS, ADDRESS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, DESCRIPTION, IMG_URL, WHATSAPP, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING *';
+    const query = 'INSERT INTO USERS (USER_ID, PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, LANGUAGES, INSTRUMENTS, ADDRESS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, DESCRIPTION, IMG_URL, WHATSAPP, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *';
     const values = [newId, userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, '', '', '', userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.DESCRIPTION, userData.IMG_URL, userData.WHATSAPP, userData.YOUTUBE_LINK];
     const result = await pool.query(query, values);
     client.release();
@@ -170,7 +164,7 @@ async function login(email, password) {
 }
 
 async function deleteUser(userId) {
-	
+
   const client = await pool.connect();
 
   try {
@@ -192,7 +186,7 @@ async function deleteUser(userId) {
   }
 }
 
-async function sendContactSolic(senderId, receiverId){
+async function sendContactSolic(senderId, receiverId) {
   const client = await pool.connect();
   // STATUS:
   // P - Pendente,
@@ -209,17 +203,17 @@ async function sendContactSolic(senderId, receiverId){
 
     console.log(check)
     if (check.rows && check.rows.length > 0) {
-     
+
       let status = check.rows[0].status == 'C' ? 'P' : 'C'
       values.push(status)
-     
+
       query = `UPDATE solicitations SET status = $3 WHERE sender_id = $1 AND receiver_id = $2 RETURNING *`
-    }else{
+    } else {
       query = "INSERT INTO solicitations (sender_id, receiver_id, status) VALUES ($1, $2, 'P') RETURNING *";
     }
-    
+
     const res = await client.query(query, values);
-  
+
     if (res.rows && res.rows.length > 0) {
       const user = res.rows[0];
       return user;
@@ -234,7 +228,7 @@ async function sendContactSolic(senderId, receiverId){
 
 }
 
-async function getContactSolics(receiverId){
+async function getContactSolics(receiverId) {
   try {
 
     const client = await pool.connect();
@@ -267,5 +261,5 @@ async function getContactSolics(receiverId){
 }
 
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles,sendContactSolic, getContactSolics
+  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics
 };
