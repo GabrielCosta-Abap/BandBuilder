@@ -226,7 +226,23 @@ async function getContactSolics(receiverId){
     const client = await pool.connect();
 
     console.log(receiverId)
-    const result = await client.query(`SELECT * FROM solicitations WHERE receiver_id = $1 AND STATUS = 'P'`, [receiverId]);
+    const result = await client.query(`SELECT solicitations.sender_id,
+                                              users.user_id,
+                                              users.name,
+                                              users.instruments,
+                                              users.musical_genre,
+                                              users.city,
+                                              users.img_url,
+                                              bands.band_id,
+                                              bands.name,
+                                              bands.musical_genre,
+                                              bands.city,
+                                              bands.img_url
+                                         FROM solicitations
+                                         LEFT JOIN users ON users.user_id = solicitations.sender_id
+                                         LEFT JOIN bands ON bands.band_id = solicitations.sender_id
+                                         WHERE receiver_id = $1
+                                           AND status      = 'P'`, [receiverId]);
     // Libera o cliente de volta para o pool de conexões
     client.release();
     console.log('Resultado da consulta:', result.rows);
