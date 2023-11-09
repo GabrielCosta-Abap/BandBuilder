@@ -125,37 +125,42 @@ async function insertUser(req, res) {
 	}
 }
 
-async function deleteUser(req, res){
+async function deleteUser(req, res) {
 	const userId = req.params.id;
 	console.log(userId);
 
-  try {
+	try {
 
-    await userNegocio.deleteUser(userId);
+		await userNegocio.deleteUser(userId);
 
-    return res.status(200).json({ message: 'Usuário excluído com sucesso' });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Erro interno do servidor' });
-  }
+		return res.status(200).json({ message: 'Usuário excluído com sucesso' });
+	} catch (error) {
+		console.error(error);
+		return res.status(500).json({ error: 'Erro interno do servidor' });
+	}
 }
 
-async function sendContactSolic(req, res){
+async function sendContactSolic(req, res) {
 	try {
-		const senderId 	 = req.params.senderId;
+		const senderId = req.params.senderId;
 		const receiverId = req.params.receiverId;
-		
-	  	await userNegocio.sendContactSolic(senderId, receiverId);
-	  	return res.status(200).json({ message: 'Solicitação enviada com sucesso!' });
+		const { io } = require('../index.js')
+
+		await userNegocio.sendContactSolic(senderId, receiverId);
+
+		console.log(io)
+		io.emit('newSolic', { message: 'Notificação de solicitação!!!' });
+
+		return res.status(200).json({ message: 'Solicitação enviada com sucesso!' });
 
 	} catch (error) {
-	  console.error(error);
-	  return res.status(500).json({ error: 'Erro interno do servidor' });
+		console.error(error);
+		return res.status(500).json({ error: 'Erro interno do servidor' });
 	}
 
 }
 
-async function getContactSolics(req, res){
+async function getContactSolics(req, res) {
 	try {
 		const receiverId = req.params.receiverId;
 		const solicitations = await userNegocio.getContactSolics(receiverId);
