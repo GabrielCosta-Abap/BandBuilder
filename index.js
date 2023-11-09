@@ -30,7 +30,7 @@ app.use('/api/bands', bandRoute);
 
 const server = http.createServer(app); // Crie um servidor HTTP usando o Express
 var io = socketIo(server); 
-io.origins('*:*'); // Isso permite qualquer origem para o Socket.io
+// io.origins('*:*'); // Isso permite qualquer origem para o Socket.io
 
 server.listen(port, () => {
   console.log(`App executando na porta: ${port}...`)
