@@ -9,7 +9,9 @@ const cors = require('cors'); // Importe o pacote cors
 const http = require('http'); 
 const socketIo = require('socket.io'); 
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://band-builder-front.vercel.app/',
+}));
 
 app.use((_req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
