@@ -13,8 +13,8 @@ app.use((_req, res, next) => {
   next();
 });
 
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 const userRoute = require('./rotas/usuario_rota');
 app.use("/api/usuario", userRoute);
@@ -24,21 +24,15 @@ app.use('/api/bands', bandRoute);
 
 const server = http.createServer(app); // Crie um servidor HTTP usando o Express
 
-const socketIo = require('socket.io') (server, {
+const io = require('socket.io')(server, {
   cors: {
     origin: "*"
   }
 }); 
 
-var io = socketIo(server); 
-// io.origins('*:*'); // Isso permite qualquer origem para o Socket.io
-
 server.listen(port, () => {
   console.log(`App executando na porta: ${port}...`)
-})
-// app.listen(port, () => {
-//   console.log(`App executando na porta: ${port}...`)
-// })
+});
 
-console.log(io)
-module.exports = { io }
+console.log(io);
+module.exports = { io };
