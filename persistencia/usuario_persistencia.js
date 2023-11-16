@@ -193,12 +193,12 @@ async function sendContactSolic(senderId, receiverId) {
   // C - Cancelada,
   // A - Solic. Aceita
   // R - Solic. Recusada
-
+  
   try {
     let query = ''
-
+    
     const values = [senderId, receiverId];
-
+    
     const check = await client.query('SELECT * FROM solicitations WHERE sender_id = $1 AND receiver_id = $2', values)
 
     console.log(check)
@@ -260,6 +260,33 @@ async function getContactSolics(receiverId) {
   }
 }
 
+async function solicitationAcceptReject(receiverId, senderId, solicitationStatus) {
+
+  const client = await pool.connect();
+
+  try {
+
+    const sql = `UPDATE solicitations SET status = $3 
+                  WHERE sender_id = $2
+                    AND receiver_id = $1
+                  RETURNING *`
+
+    const values = [receiverId, senderId, solicitationStatus];
+
+    const res = await client.query(sql, values);
+
+    if (res.rows && res.rows.length > 0) {
+      const user = res.rows[0];
+      return user;
+    } else {
+      throw new Error("Solicitação não encontrada");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  } finally {
+    await client.end();
+  }
+}
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics
+  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics, solicitationAcceptReject
 };

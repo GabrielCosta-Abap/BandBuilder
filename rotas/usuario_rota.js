@@ -14,6 +14,7 @@ router.get('/list_User_profiles/:id', userController.getUserProfiles);
 router.get('/search_profiles/:searchValue/:category', userController.searchFeedProfiles);
 router.post('/send_contact_solic/:senderId/:receiverId', userController.sendContactSolic);
 router.get('/get_contact_solics/:receiverId', userController.getContactSolics);
+router.put('/accept_reject_solicitation/:receiverId/:senderId/:solicitationStatus', userController.solicitationAcceptReject);
 
 //upload de imagem separado por enquanto.
 router.post('/upload/', upload.single("file"), (req, res) => {

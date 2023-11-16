@@ -174,7 +174,24 @@ async function getContactSolics(req, res) {
 		}
 	}
 }
+async function solicitationAcceptReject(req, res) {
+	try {
+		const receiverId = req.params.receiverId;
+		const senderId = req.params.senderId;
+		const solicitationStatus = req.params.solicitationStatus;
+		
+		const solicitation = await userNegocio.solicitationAcceptReject(receiverId, senderId, solicitationStatus);
+
+		res.status(200).json(solicitation);
+	} catch (error) {
+		if (error && error.code) {
+			res.status(error.code).send(error.message);
+		} else {
+			res.status(500).send('Deu pau na chamada da API: ' + error.message);
+		}
+	}
+}
 
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics
+	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics, solicitationAcceptReject
 };
