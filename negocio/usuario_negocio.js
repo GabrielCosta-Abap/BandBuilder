@@ -102,10 +102,27 @@ async function solicitationAcceptReject(receiverId, senderId, solicitationStatus
 	} catch (error) {
 		throw new Error('Erro ao chamar camada de Persistencia' + error.message)
 	}
+}
+async function getContacts(id){
 
+	try {
+		return await userPersistence.getContacts(id);
+	} catch (error) {
+		throw new Error('Erro ao chamar camada de Persistencia' + error.message)
+	}
 }
 
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics, solicitationAcceptReject
+	insertUser, 
+	getUsers, 
+	searchById, 
+	login, 
+	getUserProfiles, 
+	deleteUser, 
+	searchFeedProfiles, 
+	sendContactSolic, 
+	getContactSolics, 
+	solicitationAcceptReject,
+	getContacts
 };
 

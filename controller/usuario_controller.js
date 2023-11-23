@@ -192,6 +192,31 @@ async function solicitationAcceptReject(req, res) {
 	}
 }
 
+async function getContacts(req, res) {
+	try {
+		const id = req.params.id;
+		const contacts = await userNegocio.getContacts(id);
+
+		res.status(200).json(contacts);
+	} catch (error) {
+		if (error && error.code) {
+			res.status(error.code).send(error.message);
+		} else {
+			res.status(500).send('Deu pau na chamada da API: ' + error.message);
+		}
+	}
+}
+
 module.exports = {
-	insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics, solicitationAcceptReject
+	insertUser, 
+	getUsers,
+	searchById, 
+	login, 
+	getUserProfiles, 
+	deleteUser, 
+	searchFeedProfiles, 
+	sendContactSolic, 
+	getContactSolics, 
+	solicitationAcceptReject,
+	getContacts
 };

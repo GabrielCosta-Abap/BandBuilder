@@ -136,7 +136,7 @@ async function insertUser(userData) {
     const newId = 'U' + String(lastId + 1).padStart(4, '0');
 
     const query = 'INSERT INTO USERS (USER_ID, PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, LANGUAGES, INSTRUMENTS, ADDRESS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, DESCRIPTION, IMG_URL, WHATSAPP, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *';
-    const values = [newId, userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, '', '', '', userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.DESCRIPTION, userData.IMG_URL, userData.WHATSAPP, userData.YOUTUBE_LINK];
+    const values = [newId, userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, '', '', '', userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.DESCRIPTION, userData.IMG_URL, userData.PHONE, userData.YOUTUBE_LINK];
     const result = await pool.query(query, values);
     client.release();
 
@@ -287,6 +287,53 @@ async function solicitationAcceptReject(receiverId, senderId, solicitationStatus
     await client.end();
   }
 }
+
+async function getContacts(id) {
+  try {
+
+    const client = await pool.connect();
+
+    console.log(id)
+    const result = await client.query(`SELECT users.user_id,
+                                              users.name,
+                                              users.instruments,
+                                              users.musical_genre,
+                                              users.city,
+                                              users.whatsapp,
+                                              bands.band_id,
+                                              bands.name,
+                                              bands.musical_genre,
+                                              bands.city,
+                                              bands.whatsapp
+                                         FROM solicitations
+                                         LEFT JOIN users ON ( users.user_id != $1 )  
+                                                      AND ( users.user_id = solicitations.sender_id
+                                                         OR users.user_id = solicitations.receiver_id )
+                                         LEFT JOIN bands ON ( band_id != $2 ) 
+                                                        AND ( bands.band_id = solicitations.sender_id
+                                                           OR bands.band_id = solicitations.receiver_id )
+                                         WHERE ( solicitations.receiver_id = $1 OR solicitations.sender_id = $3 )
+                                           AND solicitations.status = 'A'`, [id, id, id]);
+    // Libera o cliente de volta para o pool de conexões
+    client.release();
+    console.log('Resultado da consulta:', result.rows);
+    return result.rows;
+  } catch (error) {
+    throw new Error('Erro ao obter contatos: ' + error.message);
+  }
+}
+
+
 module.exports = {
-  insertUser, getUsers, searchById, login, getUserProfiles, deleteUser, searchFeedProfiles, sendContactSolic, getContactSolics, solicitationAcceptReject
+  insertUser, 
+  getUsers, 
+  searchById, 
+  login, 
+  getUserProfiles, 
+  deleteUser, 
+  searchFeedProfiles, 
+  sendContactSolic, 
+  getContactSolics, 
+  solicitationAcceptReject,
+  getContacts
 };
