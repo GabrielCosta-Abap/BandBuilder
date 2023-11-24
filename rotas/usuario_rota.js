@@ -11,6 +11,7 @@ router.post('/insert_user/', userController.insertUser);
 router.post('/login/', userController.login);
 router.delete('/delete_user/:id', userController.deleteUser);
 router.get('/list_User_profiles/:id', userController.getUserProfiles);
+router.put("/:id", userController.updateUser);
 router.get('/search_profiles/:searchValue/:category', userController.searchFeedProfiles);
 router.post('/send_contact_solic/:senderId/:receiverId', userController.sendContactSolic);
 router.get('/get_contact_solics/:receiverId', userController.getContactSolics);

@@ -112,6 +112,17 @@ async function getContacts(id){
 	}
 }
 
+async function updateUser(id, dados){
+	try {
+    if (!dados.name) {
+      throw { code: 400, message: "É necessário fornecer pelo menos nome ou email para atualizar o usuário" };
+    }
+		return await userPersistence.updateUser(id, dados);
+	} catch (error) {
+    throw { code: 500, message: 'Erro na camada de negócios: ' + error.message };
+  }
+}
+
 module.exports = {
 	insertUser, 
 	getUsers, 
@@ -123,6 +134,7 @@ module.exports = {
 	sendContactSolic, 
 	getContactSolics, 
 	solicitationAcceptReject,
-	getContacts
+	getContacts,
+	updateUser
 };
 

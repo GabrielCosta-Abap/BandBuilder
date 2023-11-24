@@ -324,6 +324,31 @@ async function getContacts(id) {
 }
 
 
+async function updateUser(id, dados) {
+	const client = await pool.connect();
+
+  try {
+
+    const sql = `UPDATE users SET phone=$1, name=$2, gender=$3, email=$4, password=$5, birth_date=$6, city=$7, languages=$8, instruments=$9, address=$10, musical_genre=$11, musical_experience=$12, description=$13, youtube_link=$14, img_url=$15, whatsapp=$16
+                  WHERE user_id = $17
+                  RETURNING *`
+
+    const values = [dados.phone, dados.name, dados.gender, dados.email, dados.password, dados.birthdate, dados.city, dados.languages, dados.instruments, dados.address, dados.musical_genre, dados.musical_experience, dados.description, dados.youtube_link, dados.img_url, dados.whatsapp, id];
+
+    const res = await client.query(sql, values);
+		if (res.rows && res.rows.length > 0) {
+      const user = res.rows[0];
+      return user;
+    } else {
+      throw new Error("Solicitação não encontrada");
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  } finally {
+    await client.end();
+  }
+}
+
 module.exports = {
   insertUser, 
   getUsers, 
@@ -335,5 +360,6 @@ module.exports = {
   sendContactSolic, 
   getContactSolics, 
   solicitationAcceptReject,
-  getContacts
+  getContacts,
+	updateUser
 };
