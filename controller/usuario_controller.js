@@ -207,6 +207,23 @@ async function getContacts(req, res) {
 	}
 }
 
+
+async function updateUser(req, res) {
+	try {
+    const { id } = req.params;
+    const dados = req.body;
+
+    const updatedUser = await userNegocio.updateUser(id, dados);
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    if (error && error.code) {
+      res.status(error.code).send(error.message);
+    } else {
+      res.status(500).send('Erro ao atualizar: ' + error.message);
+    }
+  }
+}
+
 module.exports = {
 	insertUser, 
 	getUsers,
@@ -218,5 +235,6 @@ module.exports = {
 	sendContactSolic, 
 	getContactSolics, 
 	solicitationAcceptReject,
-	getContacts
+	getContacts,
+	updateUser
 };
