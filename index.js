@@ -34,5 +34,4 @@ server.listen(port, () => {
   console.log(`App executando na porta: ${port}...`)
 });
 
-console.log(io);
 module.exports = { io };
