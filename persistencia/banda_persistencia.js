@@ -54,9 +54,9 @@ async function insertBand(bandData) {
 
     const userBandsQuery = `INSERT INTO user_bands (user_id, band_id) VALUES ($1, $2)`
 
-    for (const user_id in bandData.user_ids) {
+    bandData.user_ids.forEach(user_id => {
       pool.query(userBandsQuery, [user_id,  newId])
-    }
+    });
 
     return result.rows[0];
   } catch (error) {
