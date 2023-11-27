@@ -47,7 +47,7 @@ async function insertBand(bandData) {
     // Gerar o novo ID
     const newId = 'B' + String(lastId + 1).padStart(4, '0');
 
-    const query = 'INSERT INTO BANDS (BAND_ID, NAME, CITY, FACEBOOK_PAGE, YOUTUBE_PAGE, IG_PAGE, IMG_URL, WHATSAPP, MUSICAL_GENRE, DESCRIPTION) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+    const query = 'INSERT INTO BANDS (BAND_ID, NAME, CITY, FACEBOOK_PAGE, YOUTUBE_PAGE, IG_PAGE, IMG_URL, WHATSAPP, MUSICAL_GENRE, DESCRIPTION) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
     const values = [newId, bandData.name, bandData.city, bandData.facebook, bandData.youtube, bandData.instagram, '', bandData.whatsapp, bandData.musical_genre, bandData.description];
     const result = await pool.query(query, values);
     client.release();
