@@ -48,7 +48,7 @@ async function insertBand(bandData) {
     const newId = 'B' + String(lastId + 1).padStart(4, '0');
 
     const query = 'INSERT INTO BANDS (BAND_ID, NAME, CITY, FACEBOOK_PAGE, YOUTUBE_PAGE, IG_PAGE, IMG_URL, WHATSAPP) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
-    const values = [newId, bandData.NAME, bandData.CITY, bandData.FACEBOOK_PAGE, bandData.YOUTUBE_PAGE, bandData.IG_PAGE, bandData.IMG_URL, bandData.WHATSAPP];
+    const values = [newId, bandData.name, bandData.city, bandData.facebook, bandData.youtube, bandData.instagram, '', bandData.whatsapp];
     const result = await pool.query(query, values);
     client.release();
 
