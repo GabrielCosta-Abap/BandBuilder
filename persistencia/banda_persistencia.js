@@ -52,6 +52,9 @@ async function insertBand(bandData) {
     const result = await pool.query(query, values);
     client.release();
 
+    const userBandsQuery = `INSERT INTO user_bands (user_id, band_id) VALUES ($1, $2)`
+    await pool.query(userBandsQuery, [bandData.user_id,  newId])
+
     return result.rows[0];
   } catch (error) {
     throw new Error('Erro ao inserir usuário no banco de dados: ' + error.message);

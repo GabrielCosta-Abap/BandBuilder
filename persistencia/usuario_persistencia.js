@@ -72,14 +72,14 @@ async function searchFeedProfiles(filter, category) {
 
         query = `SELECT * 
                    FROM users 
-                   WHERE UPPER(name) = UPPER($1)
+                   WHERE UPPER(name) LIKE UPPER($1)
                       OR UPPER(instruments) LIKE UPPER($2)
                       OR UPPER(musical_genre) = UPPER($3)
                       OR UPPER(city) = UPPER($4)`;
 
         console.log(query)
         console.log(filter, searchValue)
-        result = await client.query(query, [filter, searchValue, filter, filter]);
+        result = await client.query(query, [searchValue, searchValue, filter, filter]);
 
       } else {
         query = `SELECT * FROM users`;
