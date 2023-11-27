@@ -53,7 +53,11 @@ async function insertBand(bandData) {
     client.release();
 
     const userBandsQuery = `INSERT INTO user_bands (user_id, band_id) VALUES ($1, $2)`
-    await pool.query(userBandsQuery, [bandData.user_id,  newId])
+
+    for (user_id in bandData.user_ids) {
+      pool.query(userBandsQuery, [user_id,  newId])
+    }
+
 
     return result.rows[0];
   } catch (error) {

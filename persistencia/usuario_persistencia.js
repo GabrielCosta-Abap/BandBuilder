@@ -5,11 +5,10 @@ const { Client } = require('pg');
 
 async function getUsers() {
   try {
-    // Obtém um cliente do pool de conexões
     const client = await pool.connect();
     console.log('conectei no banco')
     const result = await client.query('SELECT * FROM users');
-    // Libera o cliente de volta para o pool de conexões
+    
     client.release();
     console.log('Resultado da consulta:', result.rows);
     return result.rows;
