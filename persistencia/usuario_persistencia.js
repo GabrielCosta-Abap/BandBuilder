@@ -348,6 +348,44 @@ async function updateUser(id, dados) {
   }
 }
 
+async function bandBuild(user_id, instruments, musical_genre, res) {
+  try {
+    let resultados = [];
+
+    for (let i = 0; i < instruments.length; i++) {
+      const instrumento = instruments[i].trim().toLowerCase();
+
+      const query = `
+			SELECT * FROM users
+			WHERE $1 IN (SELECT UNNEST(instruments))
+				AND USER_ID != $2
+      `;
+
+      const result = await pool.query(query, [instrumento, user_id]);
+
+      if (result.rows.length === 0) {
+        resultados.push(`Não encontramos usuários que dominem o instrumento: ${instrumento}`);
+      } else {
+        const usuariosPriorizados = result.rows.filter(user => user.musical_genre === musical_genre);
+
+        if (usuariosPriorizados.length > 0) {
+          resultados = resultados.concat(usuariosPriorizados);
+        } else {
+          resultados = resultados.concat(result.rows);
+        }
+      }
+    }
+
+    res.status(200).json(resultados);
+  } catch (error) {
+    console.error('Erro na busca de usuários:', error);
+    res.status(500).send('Erro na busca de usuários');
+  }
+}
+
+
+
+
 module.exports = {
   insertUser, 
   getUsers, 
@@ -360,5 +398,6 @@ module.exports = {
   getContactSolics, 
   solicitationAcceptReject,
   getContacts,
-	updateUser
+	updateUser,
+	bandBuild
 };

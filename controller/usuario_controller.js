@@ -224,6 +224,22 @@ async function updateUser(req, res) {
   }
 }
 
+async function bandBuild(req, res) {
+		try {
+			const user_id = req.params.id;
+			const { instruments, musical_genre } = req.body;
+			const bandBuild = await userNegocio.bandBuild(user_id, instruments, musical_genre);
+			res.status(200).json(bandBuild);
+		} catch (error) {
+		if (error && error.code) {
+			res.status(error.code).send(error.message);
+		} else {
+			res.status(500).send('Erro ao atualizar: ' + error.message);
+		}
+	}
+}
+
+
 module.exports = {
 	insertUser, 
 	getUsers,
@@ -236,5 +252,6 @@ module.exports = {
 	getContactSolics, 
 	solicitationAcceptReject,
 	getContacts,
-	updateUser
+	updateUser,
+	bandBuild
 };

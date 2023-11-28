@@ -59,6 +59,22 @@ async function deleteBand(req, res){
   }
 }
 
+async function updateBand(req, res) {
+	try {
+    const { id } = req.params;
+    const dados = req.body;
+
+    const updatedBand = await bandNegocio.updateBand(id, dados);
+    res.status(200).json(updatedBand);
+  } catch (error) {
+    if (error && error.code) {
+      res.status(error.code).send(error.message);
+    } else {
+      res.status(500).send('Erro ao atualizar banda: ' + error.message);
+    }
+  }
+}
+
 module.exports = {
-	insertBand, getBand, searchById, deleteBand
+	insertBand, getBand, searchById, deleteBand, updateBand
 };

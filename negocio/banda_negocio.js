@@ -46,7 +46,18 @@ async function deleteBand(bandId) {
   }
 }
 
+async function updateBand(id, dados){
+	try {
+    if (!dados.name) {
+      throw { code: 400, message: "É necessário fornecer pelo menos nome para atualizar a banda" };
+    }
+		return await bandPersistence.updateBand(id, dados);
+	} catch (error) {
+    throw { code: 500, message: 'Erro na camada de negócios: ' + error.message };
+  }
+}
+
 module.exports = {
-	insertBand, getBand, searchById, deleteBand
+	insertBand, getBand, searchById, deleteBand, updateBand
 };
 
