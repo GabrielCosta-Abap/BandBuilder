@@ -40,7 +40,47 @@ async function getUsers() {
 async function searchById(userId) {
   try {
     const client = await pool.connect();
-    const query = 'SELECT * FROM users WHERE user_id = $1';
+    const query = `SELECT
+										A.user_id,
+										A.phone,
+										A.name,
+										A.gender,
+										A.email,
+										A.password,
+										A.birth_date,
+										A.city,
+										A.languages,
+										A.address,
+										A.musical_genre,
+										A.musical_experience,
+										A.description,
+										A.youtube_link,
+										A.img_url,
+										A.whatsapp,
+										JSONB_AGG(B.INSTRUMENT_NAME) AS instruments
+									FROM
+										USERS A
+									LEFT JOIN
+										USER_INSTRUMENTS B ON A.USER_ID = B.USER_ID
+									WHERE
+										A.USER_ID = $1
+									GROUP BY
+										A.user_id,
+										A.phone,
+										A.name,
+										A.gender,
+										A.email,
+										A.password,
+										A.birth_date,
+										A.city,
+										A.languages,
+										A.address,
+										A.musical_genre,
+										A.musical_experience,
+										A.description,
+										A.youtube_link,
+										A.img_url,
+										A.whatsapp`;
     const result = await client.query(query, [userId]);
     client.release();
 
