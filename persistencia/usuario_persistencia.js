@@ -134,10 +134,15 @@ async function insertUser(userData) {
     // Gerar o novo ID
     const newId = 'U' + String(lastId + 1).padStart(4, '0');
 
-    const query = 'INSERT INTO USERS (USER_ID, PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, LANGUAGES, INSTRUMENTS, ADDRESS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, DESCRIPTION, IMG_URL, WHATSAPP, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *';
-    const values = [newId, userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, '', '', '', userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.DESCRIPTION, userData.IMG_URL, userData.PHONE, userData.YOUTUBE_LINK];
-    const result = await pool.query(query, values);
+    const query = 'INSERT INTO USERS (USER_ID, PHONE, NAME, GENDER, EMAIL, PASSWORD, BIRTH_DATE, CITY, INSTRUMENTS, MUSICAL_GENRE, MUSICAL_EXPERIENCE, DESCRIPTION, IMG_URL, YOUTUBE_LINK) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *';
+    const values = [newId, userData.PHONE, userData.NAME, userData.GENDER, userData.EMAIL, userData.PASSWORD, userData.BIRTH_DATE, userData.CITY, '', userData.MUSICAL_GENRE, userData.MUSICAL_EXPERIENCE, userData.DESCRIPTION, userData.IMG_URL, userData.YOUTUBE_LINK];
+		const result = await pool.query(query, values);
     client.release();
+
+		const instrumentsQuery = `INSERT INTO USER_INSTRUMENTS (user_id, instrument_name) VALUES($1, $2)`
+		userData.instruments.forEach(async instrument_name => {
+      await pool.query(instrumentsQuery, [newId, instrument_name])
+    });
 
     return result.rows[0];
   } catch (error) {
