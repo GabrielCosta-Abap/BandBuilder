@@ -7,7 +7,27 @@ async function getUsers() {
   try {
     const client = await pool.connect();
     console.log('conectei no banco')
-    const result = await client.query('SELECT * FROM users');
+		const query = `SELECT A.user_id,
+												 A.phone,
+												 A.name, 
+												 A.gender, 
+												 A.email, 
+												 A.password, 
+												 A.birth_date, 
+												 A.city, 
+												 A.languages, 
+												 A.address,
+												 A.musical_genre, 
+												 A.musical_experience, 
+												 A.description, 
+												 A.youtube_link, 
+												 A.img_url, 
+												 A.whatsapp,
+												 B.INSTRUMENT_NAME
+										FROM USERS A
+		 								LEFT JOIN USER_INSTRUMENTS B
+										ON A.USER_ID = B.USER_ID`
+    const result = await client.query(query);
     
     client.release();
     console.log('Resultado da consulta:', result.rows);
