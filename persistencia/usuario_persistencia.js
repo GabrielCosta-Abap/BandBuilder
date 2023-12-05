@@ -448,7 +448,27 @@ async function bandBuild(user_id, instruments, musical_genre, res) {
   }
 }
 
-
+async function getSolicitations(senderId) {
+  try {
+    const client = await pool.connect();
+    console.log('Conectei no banco')
+		const query = `SELECT A.sender_id,
+									A.receiver_id,
+									A.status,
+									B.NAME AS receiver_name
+									FROM solicitations A
+									INNER JOIN users B ON A.receiver_id = B.user_id
+									WHERE sender_id = $1
+									AND UPPER(status) = 'P'`
+    const result = await client.query(query, [senderId]);
+    
+    client.release();
+    console.log('Resultado da consulta:', result.rows);
+    return result.rows;
+  } catch (error) {
+    throw new Error('Erro ao obter usuários: ' + error.message);
+  }
+}
 
 
 module.exports = {
@@ -464,5 +484,6 @@ module.exports = {
   solicitationAcceptReject,
   getContacts,
 	updateUser,
+	getSolicitations,
 	bandBuild
 };

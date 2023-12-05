@@ -18,6 +18,7 @@ router.get('/get_contact_solics/:receiverId', userController.getContactSolics);
 router.put('/accept_reject_solicitation/:receiverId/:senderId/:solicitationStatus', userController.solicitationAcceptReject);
 router.get('/get_contacts/:id', userController.getContacts);
 router.get('/bandbuild/:id', userController.bandBuild);
+router.get('/sent_solicitations/:id', userController.getSolicitations);
 //upload de imagem separado por enquanto.
 router.post('/upload/', upload.single("file"), (req, res) => {
 	return res.json(req.file.filename);

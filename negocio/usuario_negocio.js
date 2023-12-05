@@ -123,6 +123,16 @@ async function updateUser(id, dados){
   }
 }
 
+
+async function getSolicitations(senderId) {
+	try {
+		console.log('Chegou no negócio')
+		return await userPersistence.getSolicitations(senderId);
+	} catch (error) {
+		throw new Error('Erro ao chamar camada de Persistencia' + error.message)
+	}
+}
+
 async function bandBuild(user_id, instruments, musical_genre) {
 		try{if (!user_id || !instruments || !musical_genre) {
       throw { code: 400, message: "É necessário fornecer id instrumentos e gênero musical para função "};
@@ -147,6 +157,7 @@ module.exports = {
 	solicitationAcceptReject,
 	getContacts,
 	updateUser,
+	getSolicitations,
 	bandBuild
 };
 

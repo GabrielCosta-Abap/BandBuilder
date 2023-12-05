@@ -224,6 +224,23 @@ async function updateUser(req, res) {
   }
 }
 
+
+async function getSolicitations(req, res) {
+	console.log('Chegou no controller');
+	try {
+		const senderId = req.params.id;
+		const solicitations = await userNegocio.getSolicitations(senderId);
+		res.status(200).json(solicitations);
+	} catch (error) {
+		if (error && error.code) {
+			res.status(error.code).send(error.message);
+		} else {
+			res.status(500).send('Erro na chamada: ' + error.message);
+		}
+	}
+}
+
+
 async function bandBuild(req, res) {
 		try {
 			const user_id = req.params.id;
@@ -253,5 +270,6 @@ module.exports = {
 	solicitationAcceptReject,
 	getContacts,
 	updateUser,
+	getSolicitations,
 	bandBuild
 };
