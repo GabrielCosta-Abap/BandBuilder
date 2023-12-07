@@ -133,9 +133,9 @@ async function searchFeedProfiles(filter, category) {
                    FROM users 
                    WHERE UPPER(name) LIKE UPPER($1)
                       OR UPPER(instruments) LIKE UPPER($2)
-                      OR UPPER(musical_genre) = UPPER($3)
-                      OR UPPER(city) = UPPER($4)
-                      OR UPPER(user_id) = UPPER($5)`;
+                      OR UPPER(musical_genre) LIKE UPPER($3)
+                      OR UPPER(city) LIKE UPPER($4)
+                      OR UPPER(user_id) LIKE UPPER($5)`;
 
         console.log(query)
         console.log(filter, searchValue)
@@ -156,12 +156,12 @@ async function searchFeedProfiles(filter, category) {
 
         query2 = `SELECT * 
                     FROM bands
-                    WHERE UPPER(name) = UPPER($1)
-                       OR UPPER(musical_genre) = UPPER($2)
-                       OR UPPER(city) = UPPER($3)
-                       OR UPPER(band_id) = UPPER($4)`;
+                    WHERE UPPER(name) LIKE UPPER($1)
+                       OR UPPER(musical_genre) LIKE UPPER($2)
+                       OR UPPER(city) LIKE UPPER($3)
+                       OR UPPER(band_id) LIKE UPPER($4)`;
 
-        result2 = await client.query(query2, [filter, filter, filter, filter]);
+        result2 = await client.query(query2, [searchValue, searchValue, searchValue, searchValue]);
 
       } else {
         query2 = `SELECT * FROM bands`;
