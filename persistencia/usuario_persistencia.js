@@ -147,7 +147,7 @@ async function searchFeedProfiles(filter, category, myUser) {
         console.log('3')
         console.log(query)
         console.log(filter, searchValue)
-        result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue]);
+        result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue, myUser]);
 
       } else {
         query = `SELECT * FROM users WHERE user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $1)`;
