@@ -165,12 +165,13 @@ async function searchFeedProfiles(filter, category, myUser) {
       if (filter && filter != 'all') {
 
         query2 = `SELECT * 
-                    FROM bands
-                    WHERE UPPER(name) LIKE UPPER($1)
-                       OR UPPER(musical_genre) LIKE UPPER($2)
-                       OR UPPER(city) LIKE UPPER($3)
-                       OR UPPER(band_id) LIKE UPPER($4)
-                      AND band_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $5)`;
+        FROM bands
+        WHERE (UPPER(name) LIKE UPPER($1)
+           OR UPPER(musical_genre) LIKE UPPER($2)
+           OR UPPER(city) LIKE UPPER($3)
+           OR UPPER(band_id) LIKE UPPER($4))
+           AND band_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $5)`;
+
 
         result2 = await client.query(query2, [searchValue, searchValue, searchValue, searchValue, myUser]);
 
