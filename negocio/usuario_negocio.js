@@ -134,12 +134,16 @@ async function getSolicitations(senderId) {
 }
 
 async function bandBuild(user_id, instruments, musical_genre) {
-		try{if (!user_id || !instruments || !musical_genre) {
-      throw { code: 400, message: "É necessário fornecer id instrumentos e gênero musical para função "};
-    }console.log(user_id, instruments, musical_genre);
+		try {
+			if (!user_id || !instruments || !musical_genre) {
+      		throw { code: 400, message: "É necessário fornecer id instrumentos e gênero musical para função "};
+    	} 
+		
+		console.log(user_id, instruments, musical_genre);
 		return await userPersistence.bandBuild(user_id, instruments, musical_genre);
+	
 	} catch (error) {
-    throw { code: 500, message: 'Erro na camada de negócios: ' + error.message };
+    	throw { code: 500, message: 'Erro na camada de negócios: ' + error.message };
   }
 }
 
