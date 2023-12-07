@@ -143,7 +143,7 @@ async function searchFeedProfiles(filter, category) {
         result = await client.query(query, [searchValue, searchValue, filter, filter, filter]);
 
       } else {
-        query = `SELECT * FROM users`;
+        query = `SELECT * FROM users WHERE NOT user_id IN ( SELECT receiver_id FROM solicitations WHERE sender_id = users.user_id)`;
         result = await client.query(query);
       }
 
