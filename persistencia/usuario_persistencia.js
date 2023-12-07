@@ -129,14 +129,20 @@ async function searchFeedProfiles(filter, category, myUser) {
 
       if (filter && filter != 'all') {
 
-        query = `SELECT * 
-                   FROM users 
-                   WHERE ( UPPER(name) LIKE UPPER($1)
-                      OR UPPER(instruments) LIKE UPPER($2)
-                      OR UPPER(musical_genre) LIKE UPPER($3)
-                      OR UPPER(city) LIKE UPPER($4)
-                      OR UPPER(user_id) LIKE UPPER($5) )
-                AND ( user_id NOT IN SELECT receiver_id FROM solicitations WHERE sender_id = $(3) )`;
+        query = `
+        SELECT * 
+        FROM users 
+        WHERE 
+          (
+            UPPER(name) LIKE UPPER($1)
+            OR UPPER(instruments) LIKE UPPER($2)
+            OR UPPER(musical_genre) LIKE UPPER($3)
+            OR UPPER(city) LIKE UPPER($4)
+            OR UPPER(user_id) LIKE UPPER($5)
+          )
+          AND user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $3)
+      `;
+      
 
         console.log(query)
         console.log(filter, searchValue)
