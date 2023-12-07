@@ -78,8 +78,9 @@ async function getUserProfiles(req, res) {
 async function searchFeedProfiles(req, res) {
 	const filter = req.params.searchValue;
 	const category = req.params.category;
+	const myUser = req.params.myUser;
 	try {
-		const user = await userNegocio.searchFeedProfiles(filter, category);
+		const user = await userNegocio.searchFeedProfiles(filter, category, myUser);
 		if (user) {
 			res.status(200).json(user);
 		} else {

@@ -114,7 +114,7 @@ async function getUserProfiles(userId) {
   }
 }
 
-async function searchFeedProfiles(filter, category) {
+async function searchFeedProfiles(filter, category, myUser) {
   try {
     let feedContent = [];
     const client = await pool.connect();
@@ -131,18 +131,19 @@ async function searchFeedProfiles(filter, category) {
 
         query = `SELECT * 
                    FROM users 
-                   WHERE UPPER(name) LIKE UPPER($1)
+                   WHERE ( UPPER(name) LIKE UPPER($1)
                       OR UPPER(instruments) LIKE UPPER($2)
                       OR UPPER(musical_genre) LIKE UPPER($3)
                       OR UPPER(city) LIKE UPPER($4)
-                      OR UPPER(user_id) LIKE UPPER($5)`;
+                      OR UPPER(user_id) LIKE UPPER($5) )
+                AND ( user_id NOT IN SELECT receiver_id FROM solicitations WHERE sender_id = $(3) )`;
 
         console.log(query)
         console.log(filter, searchValue)
-        result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue]);
+        result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue, myUser]);
 
       } else {
-        query = `SELECT * FROM users`;
+        query = `SELECT * FROM users WHERE user_id NOT IN SELECT receiver_id FROM solicitations WHERE sender_id = $(3) )`;
         result = await client.query(query);
       }
 
