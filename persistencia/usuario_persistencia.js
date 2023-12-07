@@ -136,7 +136,7 @@ async function searchFeedProfiles(filter, category) {
                       OR UPPER(musical_genre) = UPPER($3)
                       OR UPPER(city) = UPPER($4)
                       OR UPPER(user_id) = UPPER($5) )
-                    AND NOT user_id IN ( SELECT receiver_id FROM solicitations WHERE receiver_id = users.user_id )`;
+                    AND NOT user_id IN ( SELECT receiver_id FROM solicitations WHERE sender_id = users.user_id)`;
 
         console.log(query)
         console.log(filter, searchValue)
