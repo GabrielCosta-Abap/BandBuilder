@@ -125,32 +125,35 @@ async function searchFeedProfiles(filter, category, myUser) {
 
     const searchValue = `%${filter}%`;
 
+    console.log('1')
+    
     if (category != 2) { // se pede por músicos
+      
+      console.log('2')
 
       if (filter && filter != 'all') {
-
-        query = `
-        SELECT * 
+        
+        console.log('3')
+        query = `SELECT * 
         FROM users 
-        WHERE 
-          (
-            UPPER(name) LIKE UPPER($1)
-            OR UPPER(instruments) LIKE UPPER($2)
-            OR UPPER(musical_genre) LIKE UPPER($3)
-            OR UPPER(city) LIKE UPPER($4)
-            OR UPPER(user_id) LIKE UPPER($5)
-          )
-          AND user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $6)
-      `;
-      
-
+        WHERE ( UPPER(name) LIKE UPPER($1)
+        OR UPPER(instruments) LIKE UPPER($2)
+        OR UPPER(musical_genre) LIKE UPPER($3)
+        OR UPPER(city) LIKE UPPER($4)
+        OR UPPER(user_id) LIKE UPPER($5) )
+        AND user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = 'U0081')`;
+        
+        
+        console.log('3')
         console.log(query)
         console.log(filter, searchValue)
-        result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue, myUser]);
+        result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue]);
 
       } else {
-        query = `SELECT * FROM users WHERE user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $1`;
+        query = `SELECT * FROM users WHERE user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $1)`;
+        console.log(myUser)
         result = await client.query(query, [myUser]);
+        
       }
 
       feedContent = feedContent.concat(result.rows);

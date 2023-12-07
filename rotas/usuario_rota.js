@@ -12,7 +12,7 @@ router.post('/login/', userController.login);
 router.delete('/delete_user/:id', userController.deleteUser);
 router.get('/list_User_profiles/:id', userController.getUserProfiles);
 router.put("/:id", userController.updateUser);
-router.get('/search_profiles/:searchValue/:category/:myuser', userController.searchFeedProfiles);
+router.get('/search_profiles/:searchValue/:category/:myUser', userController.searchFeedProfiles);
 router.post('/send_contact_solic/:senderId/:receiverId', userController.sendContactSolic);
 router.get('/get_contact_solics/:receiverId', userController.getContactSolics);
 router.put('/accept_reject_solicitation/:receiverId/:senderId/:solicitationStatus', userController.solicitationAcceptReject);
