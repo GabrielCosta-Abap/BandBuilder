@@ -8,25 +8,25 @@ async function getUsers() {
     const client = await pool.connect();
     console.log('conectei no banco')
 		const query = `SELECT A.user_id,
-												 A.phone,
-												 A.name, 
-												 A.gender, 
-												 A.email, 
-												 A.password, 
-												 A.birth_date, 
-												 A.city, 
-												 A.languages, 
-												 A.address,
-												 A.musical_genre, 
-												 A.musical_experience, 
-												 A.description, 
-												 A.youtube_link, 
-												 A.img_url, 
-												 A.whatsapp,
-												 B.INSTRUMENT_NAME
-										FROM USERS A
-		 								LEFT JOIN USER_INSTRUMENTS B
-										ON A.USER_ID = B.USER_ID`
+                          A.phone,
+                          A.name, 
+                          A.gender, 
+                          A.email, 
+                          A.password, 
+                          A.birth_date, 
+                          A.city, 
+                          A.languages, 
+                          A.address,
+                          A.musical_genre, 
+                          A.musical_experience, 
+                          A.description, 
+                          A.youtube_link, 
+                          A.img_url, 
+                          A.whatsapp,
+                          B.INSTRUMENT_NAME
+                      FROM USERS A
+                      LEFT JOIN USER_INSTRUMENTS B
+                      ON A.USER_ID = B.USER_ID`
     const result = await client.query(query);
     
     client.release();
@@ -134,11 +134,12 @@ async function searchFeedProfiles(filter, category) {
                    WHERE UPPER(name) LIKE UPPER($1)
                       OR UPPER(instruments) LIKE UPPER($2)
                       OR UPPER(musical_genre) = UPPER($3)
-                      OR UPPER(city) = UPPER($4)`;
+                      OR UPPER(city) = UPPER($4)
+                      OR UPPER(USER_ID) = UPPER($5) `;
 
         console.log(query)
         console.log(filter, searchValue)
-        result = await client.query(query, [searchValue, searchValue, filter, filter]);
+        result = await client.query(query, [searchValue, searchValue, filter, filter, filter]);
 
       } else {
         query = `SELECT * FROM users`;
@@ -157,9 +158,10 @@ async function searchFeedProfiles(filter, category) {
                     FROM bands
                     WHERE UPPER(name) = UPPER($1)
                        OR UPPER(musical_genre) = UPPER($2)
-                       OR UPPER(city) = UPPER($3)`;
+                       OR UPPER(city) = UPPER($3)
+                       OR UPPER(BAND_ID) = UPPER($4))`;
 
-        result2 = await client.query(query2, [filter, filter, filter]);
+        result2 = await client.query(query2, [filter, filter, filter, filter]);
 
       } else {
         query2 = `SELECT * FROM bands`;
@@ -451,7 +453,6 @@ async function bandBuild(user_id, instruments, musical_genre, res) {
 async function getSolicitations(senderId) {
   try {
     const client = await pool.connect();
-    console.log('Conectei no banco')
 		const query = `SELECT A.sender_id,
 									A.receiver_id,
 									A.status,
@@ -469,7 +470,6 @@ async function getSolicitations(senderId) {
     throw new Error('Erro ao obter usuários: ' + error.message);
   }
 }
-
 
 module.exports = {
   insertUser, 
