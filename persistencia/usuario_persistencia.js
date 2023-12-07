@@ -140,7 +140,7 @@ async function searchFeedProfiles(filter, category, myUser) {
             OR UPPER(city) LIKE UPPER($4)
             OR UPPER(user_id) LIKE UPPER($5)
           )
-          AND user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $3)
+          AND user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $6)
       `;
       
 
@@ -149,8 +149,8 @@ async function searchFeedProfiles(filter, category, myUser) {
         result = await client.query(query, [searchValue, searchValue, searchValue, searchValue, searchValue, myUser]);
 
       } else {
-        query = `SELECT * FROM users WHERE user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $3`;
-        result = await client.query(query);
+        query = `SELECT * FROM users WHERE user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $1`;
+        result = await client.query(query, [myUser]);
       }
 
       feedContent = feedContent.concat(result.rows);
