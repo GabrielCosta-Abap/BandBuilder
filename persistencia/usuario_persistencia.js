@@ -176,7 +176,7 @@ async function searchFeedProfiles(filter, category, myUser) {
         result2 = await client.query(query2, [searchValue, searchValue, searchValue, searchValue, myUser]);
 
       } else {
-        query2 = `SELECT * FROM bands WHERE user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $1)`;
+        query2 = `SELECT * FROM bands WHERE band_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $1)`;
         result2 = await client.query(query2, [myUser]);
       }
 
