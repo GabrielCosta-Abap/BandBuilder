@@ -456,9 +456,12 @@ async function getSolicitations(senderId) {
 		const query = `SELECT A.sender_id,
 									A.receiver_id,
 									A.status,
-									B.NAME AS receiver_name
-									FROM solicitations A
-									INNER JOIN users B ON A.receiver_id = B.user_id
+									B.NAME AS receiver_name,
+                  B.*,
+                  C.*
+                  FROM solicitations A
+									LEFT JOIN users B ON A.receiver_id = B.user_id
+                  LEFT JOIN bands C ON A.receiver_id = C.band_id
 									WHERE sender_id = $1
 									AND UPPER(status) = 'P'`
     const result = await client.query(query, [senderId]);
