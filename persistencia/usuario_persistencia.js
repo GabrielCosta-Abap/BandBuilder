@@ -134,14 +134,56 @@ async function searchFeedProfiles(filter, category, myUser) {
       if (filter && filter != 'all') {
         
         console.log('3')
-        query = `SELECT * 
-        FROM users 
-        WHERE ( UPPER(name) LIKE UPPER($1)
-        OR UPPER(instruments) LIKE UPPER($2)
-        OR UPPER(musical_genre) LIKE UPPER($3)
-        OR UPPER(city) LIKE UPPER($4)
-        OR UPPER(user_id) LIKE UPPER($5) )
-        AND user_id NOT IN (SELECT receiver_id FROM solicitations WHERE sender_id = $6)`;
+        query = `SELECT
+										u.user_id,
+										u.name,
+										u.phone,
+										u.gender,
+										u.email,
+										u.password,
+										u.birth_date,
+										u.city,
+										u.languages,
+										u.address,
+										u.musical_genre,
+										u.musical_experience,
+										u.description,
+										u.youtube_link,
+										u.img_url,
+										u.whatsapp,
+										ARRAY_AGG(ui.instrument_name) AS instruments
+								FROM
+										users u
+								LEFT JOIN
+										user_instruments ui ON u.user_id = ui.user_id
+								WHERE(
+										UPPER(u.name) LIKE UPPER($1)
+										OR UPPER(ui.instrument_name) LIKE UPPER($2)
+										OR UPPER(u.musical_genre) LIKE UPPER($3)
+										OR UPPER(u.city) LIKE UPPER($4)
+										OR UPPER(u.user_id) LIKE UPPER($5)
+										)
+										AND u.user_id NOT IN (
+											SELECT receiver_id 
+											FROM solicitations 
+											WHERE sender_id = $6)
+								GROUP BY
+										u.user_id,
+										u.name,
+										u.phone,
+										u.gender,
+										u.email,
+										u.password,
+										u.birth_date,
+										u.city,
+										u.languages,
+										u.address,
+										u.musical_genre,
+										u.musical_experience,
+										u.description,
+										u.youtube_link,
+										u.img_url,
+										u.whatsapp;`;
         
         
         console.log('3')
