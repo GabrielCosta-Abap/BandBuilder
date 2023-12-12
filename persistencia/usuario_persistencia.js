@@ -458,14 +458,14 @@ async function updateUser(id, dados) {
 
     const values = [dados.phone, dados.name, dados.gender, dados.email, dados.password, dados.birthdate, dados.city, dados.languages, '', dados.address, dados.musical_genre, dados.musical_experience, dados.description, dados.youtube_link, dados.img_url, dados.whatsapp, id];
     const res = await client.query(sql, values);
-    client.release();
-
+    
     const instrumentsInsertQuery = `INSERT INTO USER_INSTRUMENTS (user_id, instrument_name) VALUES($1, $2)`;
     dados.instruments.forEach(async (instrument_name) => {
       await pool.query(instrumentsInsertQuery, [id, instrument_name]);
       console.log(id, instrument_name);
     });
-
+    
+    // client.release();
     if (res.rows && res.rows.length > 0) {
       const user = res.rows[0];
       return user;
@@ -475,7 +475,7 @@ async function updateUser(id, dados) {
   } catch (error) {
     throw new Error(error.message);
   } finally {
-    //await client.end();
+    await client.end();
   }
 }
 
